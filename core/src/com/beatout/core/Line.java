@@ -11,6 +11,10 @@ public class Line {
         this.end = end;
     }
 
+    public Line(float x1, float y1, float x2, float y2) {
+        this(new Vector(x1, y1), new Vector(x2, y2));
+    }
+
     public Vector getPointOnLine(float fraction) {
         return start.add(end.subtract(start).scale(fraction));
     }
@@ -19,4 +23,11 @@ public class Line {
         return end.subtract(start).length();
     }
 
+    public Vector getStart() {
+        return start;
+    }
+
+    public Vector getEnd() {
+        return end;
+    }
 }

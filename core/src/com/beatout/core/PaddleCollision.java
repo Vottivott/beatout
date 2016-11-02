@@ -2,11 +2,11 @@ package com.beatout.core;
 
 import com.beatout.math.Vector;
 
-public class BatCollision extends Collision {
+public class PaddleCollision extends Collision {
 
     public static final String BAT_COLLISION_EVENT = "BatCollisionEvent";
 
-    public BatCollision(Vector position) {
+    public PaddleCollision(Vector position) {
         super(position);
     }
 
