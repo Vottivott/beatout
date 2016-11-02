@@ -30,4 +30,12 @@ public class Line {
     public Vector getEnd() {
         return end;
     }
+
+    public boolean isVertical() {
+        return (start.getX() == end.getX());
+    }
+
+    public boolean isHorizontal() {
+        return (start.getY() == end.getY());
+    }
 }

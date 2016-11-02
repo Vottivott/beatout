@@ -2,7 +2,7 @@ package com.beatout.core;
 
 import com.beatout.math.Vector;
 
-public class Block implements Positioned {
+public class Block extends Collideable {
     private Vector position;
     private Vector size;
     private boolean active;
@@ -25,7 +25,13 @@ public class Block implements Positioned {
         return position;
     }
 
+    @Override
     public Vector getSize() {
         return size;
+    }
+
+    @Override
+    public Collision collideWith(Vector collisionPoint, boolean verticalEdge) {
+        return new BlockCollision(collisionPoint, verticalEdge, this);
     }
 }

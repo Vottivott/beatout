@@ -17,8 +17,10 @@ public class BeatOutMath {
      *                       in only the direction towards the endpoint (and beyond)
      * @return null if the lines don't intersect
      */
-    public static Vector getIntersectionBetweenVerticalLineSegmentAndLine(float x, float yMin, float yMax, Line line, boolean lineIsOneEnded) {
+    public static Vector getIntersectionBetweenVerticalLineSegmentAndLine(float x, float y1, float y2, Line line, boolean lineIsOneEnded) {
         Vector intersection = getIntersectionBetweenVerticalLineAndLine(x, line, lineIsOneEnded);
+        float yMin = Math.min(y1, y2);
+        float yMax = Math.max(y1, y2);
         if (intersection != null && intersection.getY() >= yMin && intersection.getY() <= yMax) {
             return intersection;
         } else {
@@ -33,8 +35,10 @@ public class BeatOutMath {
      *                       in only the direction towards the endpoint (and beyond)
      * @return null if the lines don't intersect
      */
-    public static Vector getIntersectionBetweenHorizontalLineSegmentAndLine(float y, float xMin, float xMax, Line line, boolean lineIsOneEnded) {
+    public static Vector getIntersectionBetweenHorizontalLineSegmentAndLine(float y, float x1, float x2, Line line, boolean lineIsOneEnded) {
         Vector intersection = getIntersectionBetweenHorizontalLineAndLine(y, line, lineIsOneEnded);
+        float xMin = Math.min(x1, x2);
+        float xMax = Math.max(x1, x2);
         if (intersection != null && intersection.getX() >= xMin && intersection.getX() <= xMax) {
             return intersection;
         } else {

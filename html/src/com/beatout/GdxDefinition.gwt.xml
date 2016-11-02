@@ -6,7 +6,7 @@
 	<inherits name='Box2DLights' />
 
 	<inherits name='BeatOut' />
-	<entry-point class='com.beatout.client.HtmlLauncher' />
+	<entry-position class='com.beatout.client.HtmlLauncher' />
 	
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
 </module>

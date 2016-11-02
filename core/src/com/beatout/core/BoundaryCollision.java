@@ -6,8 +6,8 @@ public class BoundaryCollision extends Collision {
 
     public static final String BOUNDARY_COLLISION_EVENT = "BoundaryCollisionEvent";
 
-    public BoundaryCollision(Vector position) {
-        super(position);
+    public BoundaryCollision(Vector position, boolean isVertical) {
+        super(position, isVertical);
     }
 
     @Override

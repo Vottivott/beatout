@@ -7,7 +7,7 @@ public class PaddleCollision extends Collision {
     public static final String BAT_COLLISION_EVENT = "BatCollisionEvent";
 
     public PaddleCollision(Vector position) {
-        super(position);
+        super(position, false);
     }
 
     @Override

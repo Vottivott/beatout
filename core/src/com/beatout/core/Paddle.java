@@ -2,7 +2,7 @@ package com.beatout.core;
 
 import com.beatout.math.*;
 
-public class Paddle implements Positioned {
+public class Paddle extends Collideable { // Maybe not necessary to be a Collideable
     private Vector size;
     private com.beatout.math.Line lineOfMovement;
     private float fractionalPosition;
@@ -26,5 +26,10 @@ public class Paddle implements Positioned {
 
     public Vector getSize() {
         return size;
+    }
+
+    @Override
+    public Collision collideWith(Vector collisionPoint, boolean verticalEdge) {
+        return new PaddleCollision(collisionPoint);
     }
 }
