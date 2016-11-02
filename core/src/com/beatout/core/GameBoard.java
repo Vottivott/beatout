@@ -123,7 +123,7 @@ public class GameBoard extends Collideable {
      * Find the point where the ball's line of movement intersects with the rectangular object, if any.
      * @return null if there is no collision point
      */
-    private Collision findCollision(Ball ball, Collideable collideable) {
+    public static Collision findCollision(Ball ball, Collideable collideable) {
         List<Line> edges = getPossibleCollisionEdges(ball, collideable);
         for (Line edge : edges) {
             if (edge.isVertical()) {
@@ -142,24 +142,25 @@ public class GameBoard extends Collideable {
      * it is impossible to collide with the back sides of the object before the colliding with the front.
      * Thus, we can filter out the back edges from the list of possible collision lines.
      */
-    private List<Line> getPossibleCollisionEdges(Ball ball, RectBounded rect) {
+    public static List<Line> getPossibleCollisionEdges(Ball ball, RectBounded rect) {
         List<Line> possibleLines = new ArrayList<Line>();
-        if (ball.getPosition().getX() > rect.getRight()) {
+        if (ball.getLeft() > rect.getRight()) {
             possibleLines.add(rect.getRightLine());
-        } else if (ball.getPosition().getX() < rect.getLeft()) {
+        } else if (ball.getRight() < rect.getLeft()) {
             possibleLines.add(rect.getLeftLine());
-        } else {
+        }
+        if (ball.getTop() > rect.getBottom()) {
+            possibleLines.add(rect.getBottomLine());
+        } else if (ball.getBottom() < rect.getTop()) {
+            possibleLines.add(rect.getTopLine());
+        }
+        if (possibleLines.isEmpty()) {
+            // Add possible lines for the ball being in the inside of the ball
             if (ball.getDirection().getX() < 0) {
                 possibleLines.add(rect.getLeftLine());
             } else {
                 possibleLines.add(rect.getRightLine());
             }
-        }
-        if (ball.getPosition().getY() > rect.getBottom()) {
-            possibleLines.add(rect.getRightLine());
-        } else if (ball.getPosition().getY() < rect.getTop()) {
-            possibleLines.add(rect.getTopLine());
-        } else {
             if (ball.getDirection().getY() < 0) {
                 possibleLines.add(rect.getTopLine());
             } else {

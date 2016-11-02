@@ -4,7 +4,7 @@ import com.beatout.math.*;
 import com.beatout.math.Line;
 
 // Immutable
-public class Ball implements Positioned {
+public class Ball extends RectBounded {
     private final float radius;
     private Vector position;
     private final Vector direction;
@@ -23,8 +23,14 @@ public class Ball implements Positioned {
         return direction;
     }
 
+    @Override
     public Vector getPosition() {
         return position;
+    }
+
+    @Override
+    public Vector getSize() {
+        return new Vector(2*radius, 2*radius);
     }
 
     public Line getDirectionLine() {
