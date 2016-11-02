@@ -1,6 +1,6 @@
 package com.beatout.core;
 
-import com.beatout.math.NoteValues;
+import com.beatout.math.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,11 @@ public class QuantizationTimePlanner implements TimePlanner {
 
     private List<Float> getTimePositionsBasedOnConstantSpeed(Trajectory trajectory) {
         float totalDistance = trajectory.getTotalDistance();
-        List<Line> lines = trajectory.getLinesBetweenBounces();
+        List<com.beatout.math.Line> lines = trajectory.getLinesBetweenBounces();
         List<Float> timePositions = new ArrayList<Float>();
         timePositions.add(0f);
         float distanceSoFar = 0;
-        for (Line line : lines) {
+        for (com.beatout.math.Line line : lines) {
             distanceSoFar += line.getLength();
             timePositions.add(distanceSoFar / totalDistance);
         }

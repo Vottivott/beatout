@@ -1,6 +1,6 @@
 package com.beatout.core;
 
-import com.beatout.math.Vector;
+import com.beatout.math.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,14 @@ import java.util.List;
 public class Trajectory {
     private List<Collision> bounces;
 
+    public Trajectory(List<Collision> bounces) {
+        this.bounces = bounces;
+    }
+
     public Vector getPosition(PointOnTrajectory point) {
         Collision currentBounce = bounces.get(point.getBounceIndex());
         Collision nextBounce = bounces.get(point.getBounceIndex() + 1);
-        Line line = new Line(currentBounce.getPosition(), nextBounce.getPosition());
+        com.beatout.math.Line line = new com.beatout.math.Line(currentBounce.getPosition(), nextBounce.getPosition());
         return line.getPointOnLine(point.getLineFraction());
     }
 
@@ -34,12 +38,12 @@ public class Trajectory {
         return distance;
     }
 
-    public List<Line> getLinesBetweenBounces() {
-        List<Line> lines = new ArrayList<Line>();
+    public List<com.beatout.math.Line> getLinesBetweenBounces() {
+        List<com.beatout.math.Line> lines = new ArrayList<com.beatout.math.Line>();
         for (int bounce = 0; bounce < bounces.size()-1; bounce++) {
             Vector currentBouncePos = bounces.get(bounce).getPosition();
             Vector nextBouncePos = bounces.get(bounce + 1).getPosition();
-            Line line = new Line(currentBouncePos, nextBouncePos);
+            com.beatout.math.Line line = new com.beatout.math.Line(currentBouncePos, nextBouncePos);
         }
         return lines;
     }

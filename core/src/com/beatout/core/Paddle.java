@@ -1,17 +1,16 @@
 package com.beatout.core;
 
-import com.beatout.math.BeatOutMath;
-import com.beatout.math.Vector;
+import com.beatout.math.*;
 
 public class Paddle implements Positioned {
     private Vector size;
-    private Line lineOfMovement;
+    private com.beatout.math.Line lineOfMovement;
     private float fractionalPosition;
     private float speed;
 
-    public Paddle(Vector size, Line range, float speed) {
+    public Paddle(Vector size, com.beatout.math.Line range, float speed) {
         this.size = size;
-        this.lineOfMovement = new Line(range.getStart(), range.getEnd().subtract(size.getX(), 0));
+        this.lineOfMovement = new com.beatout.math.Line(range.getStart(), range.getEnd().subtract(size.getX(), 0));
         this.speed = speed;
         this.fractionalPosition = 0.5f;
     }

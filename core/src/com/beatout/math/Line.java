@@ -1,4 +1,4 @@
-package com.beatout.core;
+package com.beatout.math;
 
 import com.beatout.math.Vector;
 
