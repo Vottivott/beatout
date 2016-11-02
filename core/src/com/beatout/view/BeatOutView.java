@@ -25,7 +25,6 @@ public class BeatOutView extends ApplicationAdapter {
     BeatOut beatOut;
 
 	SpriteBatch batch;
-	Texture img;
     ShapeRenderer shapeRenderer;
     RayHandler rayHandler;
 	World world;
@@ -94,8 +93,12 @@ public class BeatOutView extends ApplicationAdapter {
             float h = Gdx.graphics.getHeight();
             float x = block.getPosition().getX();
             float y = block.getPosition().getY();
+            float gdxX = x;
+            float gdxY = h - y;
+            float gdxWidth = block.getSize().getX();
+            float gdxHeight = -block.getSize().getY();
             shapeRenderer.setColor(1,0.8f,0, 1);
-            shapeRenderer.rect(x, y, 40, 27);
+            shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
 //            shapeRenderer.rect(10, 10, w - 20, h - 20);
             shapeRenderer.end();
 //            float x1=w/3;
@@ -127,7 +130,6 @@ public class BeatOutView extends ApplicationAdapter {
     @Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
         rayHandler.dispose();
 	}
 }

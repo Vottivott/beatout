@@ -9,7 +9,7 @@ import com.beatout.math.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollisionEffect {
+public class CollisionEffect { // TODO: Improve effect animation
     private Vector position;
     private float duration = 0.05f;
     private float time = 0f;
