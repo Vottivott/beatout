@@ -59,7 +59,7 @@ public class BeatOutMath {
         if (direction.getX() == 0) {
             return null; // Both lines are vertical so they don't intersect
         }
-        if (lineIsOneEnded && (direction.getX() > 0 && x < 0 || direction.getX() < 0 && x > 0)) {
+        if (lineIsOneEnded && (direction.getX() > 0 && x < line.getStart().getX() || direction.getX() < 0 && x > line.getStart().getX())) {
             return null; // The vertical line is on the wrong side of the one-ended line
         }
         float slope = direction.getY() / direction.getX();
