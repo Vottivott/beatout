@@ -86,7 +86,11 @@ public class BeatOutMath {
     }
 
     private static Vector getVectorWithXAndYSwapped(Vector vector) {
-        return new Vector(vector.getY(), vector.getX());
+        if (vector == null) {
+            return null;
+        } else {
+            return new Vector(vector.getY(), vector.getX());
+        }
     }
 
     /**

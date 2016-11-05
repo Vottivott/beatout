@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import java.util.Iterator;
 import java.util.List;
 import com.beatout.core.*;
+import com.beatout.math.Line;
 import com.beatout.math.Vector;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class BeatOutView extends ApplicationAdapter {
 	World world;
 	OrthographicCamera camera;
     private List<CollisionEffect> collisionEffects;
+
+    Trajectory trajectory; // For debugging
 
 
     @Override
@@ -69,6 +72,10 @@ public class BeatOutView extends ApplicationAdapter {
 		camera = new OrthographicCamera(viewportWidth, viewportHeight);
 		camera.position.set(viewportWidth / 2f, viewportHeight / 2f, 0);
 		camera.update();
+
+
+
+        trajectory = beatOut.getGameBoard().calculateTrajectory();
 	}
 
 	public void update() {
@@ -130,9 +137,21 @@ public class BeatOutView extends ApplicationAdapter {
         float gdxWidth = paddle.getSize().getX();
         float gdxHeight = -paddle.getSize().getY();
         shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
-        shapeRenderer.end();
+        drawTrajectory(trajectory, shapeRenderer);
 
+        shapeRenderer.end();
 	}
+
+    private void drawTrajectory(Trajectory trajectory, ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(1,0f,0f, 1);
+        for (Line line : trajectory.getLinesBetweenBounces()) {
+            float gdxX1 = line.getStart().getX();
+            float gdxY1 = Gdx.graphics.getHeight() - line.getStart().getY();
+            float gdxX2 = line.getEnd().getX();
+            float gdxY2 = Gdx.graphics.getHeight() - line.getEnd().getY();
+            shapeRenderer.line(gdxX1, gdxY1, gdxX2, gdxY2);
+        }
+    }
 
     private void updateCollisionEffects() {
         Iterator<CollisionEffect> iterator = collisionEffects.iterator();

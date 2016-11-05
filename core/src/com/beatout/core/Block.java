@@ -10,6 +10,7 @@ public class Block extends Collideable {
     public Block(Vector position, Vector size) {
         this.position = position;
         this.size = size;
+        this.active = true;
     }
 
     public boolean isActive() {

@@ -23,14 +23,14 @@ public class GameBoardTest {
         Set<Line> expected = new HashSet<Line>();
         expected.add(block.getTopLine());
         expected.add(block.getLeftLine());
-        assertEquals(edges, expected);
+        assertEquals(edges, expected); // From top-left
 
         ball = new Ball(ball.getRadius(), new Vector(90, 60), new Vector(-1, -0.2f));
         edges = new HashSet<Line>(GameBoard.getPossibleCollisionEdges(ball, block));
         expected.clear();
         expected.add(block.getRightLine());
 //        printEdges(edges, block);
-        assertEquals(edges, expected);
+        assertEquals(edges, expected); // From the right
     }
 
     private void printEdges(Collection<Line> edges, Block block) {

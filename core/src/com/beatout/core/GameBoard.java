@@ -23,7 +23,7 @@ public class GameBoard extends Collideable {
     public final static int BAT_DISTANCE_TO_BOTTOM = 50;
     public final static float BAT_SPEED = 1.4f;
 
-    public static final float BALL_RADIUS = 30;
+    public static final float BALL_RADIUS = 1;//30;
 
     public GameBoard(float width, float height) {
         this.width = width;
@@ -31,7 +31,7 @@ public class GameBoard extends Collideable {
         createTestLevel();
         float batY = height - BAT_HEIGHT - BAT_DISTANCE_TO_BOTTOM;
         paddle = new Paddle(new Vector(BAT_WIDTH, BAT_HEIGHT), new com.beatout.math.Line(0, batY, width, batY), BAT_SPEED);
-        ball = new Ball(BALL_RADIUS, paddle.getPosition().add(paddle.getSize().getX()/2, -2*BALL_RADIUS), new Vector(0, -1));
+        ball = new Ball(BALL_RADIUS, paddle.getPosition().add(paddle.getSize().getX()/2, -2*BALL_RADIUS), new Vector(-1, -1));
         this.bottomY = batY - BALL_RADIUS*2;
     }
 
@@ -63,13 +63,23 @@ public class GameBoard extends Collideable {
 
     public Trajectory calculateTrajectory() {
         List<Collision> bounces = new ArrayList<Collision>();
+        // TODO: Continue testing
+        //TODO: The problem is that the ball gets stuck at the right boundary at (540,25)
         Ball simulatedBall = ball;
+        bounces.add(new PaddleCollision(simulatedBall.getPosition()));
 
         boolean finished = false;
         while (!finished) {
             Collision collision = calculateNextCollision(simulatedBall);
             bounces.add(collision);
-            simulatedBall = new Ball(simulatedBall.getRadius(), simulatedBall.getPosition(), collision.getResultingDirection(simulatedBall.getDirection()));
+
+            // TEST
+            if (simulatedBall.getPosition().equals(collision.getPosition())) {
+                finished = true;
+            }
+            // \TEST
+
+            simulatedBall = new Ball(simulatedBall.getRadius(), collision.getPosition(), collision.getResultingDirection(simulatedBall.getDirection()));
             if (simulatedBall.getPosition().getY() >= bottomY) { // If the ball returns to the bottom, the trajectory is finished
                 finished = true;
             }
@@ -123,15 +133,20 @@ public class GameBoard extends Collideable {
      * Find the point where the ball's line of movement intersects with the rectangular object, if any.
      * @return null if there is no collision point
      */
+    // TODO : Make trajectory calculation take ball radius into account
     public static Collision findCollision(Ball ball, Collideable collideable) {
         List<Line> edges = getPossibleCollisionEdges(ball, collideable);
         for (Line edge : edges) {
             if (edge.isVertical()) {
                 Vector position = BeatOutMath.getIntersectionBetweenVerticalLineSegmentAndLine(edge.getStart().getX(), edge.getStart().getY(), edge.getEnd().getY(), ball.getDirectionLine(), true);
-                return collideable.collideWith(position, true);
+                if (position != null) {
+                    return collideable.collideWith(position, true);
+                }
             } else if (edge.isHorizontal()) {
                 Vector position = BeatOutMath.getIntersectionBetweenHorizontalLineSegmentAndLine(edge.getStart().getY(), edge.getStart().getX(), edge.getEnd().getX(), ball.getDirectionLine(), true);
-                return collideable.collideWith(position, false);
+                if (position != null) {
+                    return collideable.collideWith(position, false);
+                }
             }
         }
         return null;

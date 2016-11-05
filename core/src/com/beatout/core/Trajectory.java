@@ -38,12 +38,13 @@ public class Trajectory {
         return distance;
     }
 
-    public List<com.beatout.math.Line> getLinesBetweenBounces() {
-        List<com.beatout.math.Line> lines = new ArrayList<com.beatout.math.Line>();
+    public List<Line> getLinesBetweenBounces() {
+        List<Line> lines = new ArrayList<Line>();
         for (int bounce = 0; bounce < bounces.size()-1; bounce++) {
             Vector currentBouncePos = bounces.get(bounce).getPosition();
             Vector nextBouncePos = bounces.get(bounce + 1).getPosition();
-            com.beatout.math.Line line = new com.beatout.math.Line(currentBouncePos, nextBouncePos);
+            Line line = new Line(currentBouncePos, nextBouncePos);
+            lines.add(line);
         }
         return lines;
     }

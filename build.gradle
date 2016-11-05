@@ -58,6 +58,7 @@ project(":core") {
     }
 }
 
+/*
 project(":html") {
     apply plugin: "gwt"
     apply plugin: "war"
@@ -73,6 +74,7 @@ project(":html") {
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion:sources"
     }
 }
+*/
 
 project(":android") {
     apply plugin: "android"
