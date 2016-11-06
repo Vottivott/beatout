@@ -86,9 +86,17 @@ public class BeatOutView extends ApplicationAdapter {
             beatOut.moveBat(direction, Gdx.graphics.getDeltaTime());
         }
         beatOut.update(Gdx.graphics.getDeltaTime());
+        handleInput();
     }
 
-	@Override
+    private void handleInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            beatOut.getGameBoard().createTestLevel();
+            trajectory = beatOut.getGameBoard().calculateTrajectory();
+        }
+    }
+
+    @Override
 	public void render () {
         update();
 
@@ -108,27 +116,16 @@ public class BeatOutView extends ApplicationAdapter {
         GameBoard gameBoard = beatOut.getGameBoard();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Block block : gameBoard.getBlocks()) {
-            float x = block.getPosition().getX();
-            float y = block.getPosition().getY();
-            float gdxX = x;
-            float gdxY = h - y;
-            float gdxWidth = block.getSize().getX();
-            float gdxHeight = -block.getSize().getY();
-            shapeRenderer.setColor(1,0.8f,0, 1);
-            shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
-//            shapeRenderer.rect(10, 10, w - 20, h - 20);
-//            float x1=w/3;
-//            float y1=h/3;
-//            float cc=w/2;
-//            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//            shapeRenderer.setColor(290/255f, 190/255f,190/255f, 1);
-//            shapeRenderer.rect(x1,y1, cc,cc);
-//            shapeRenderer.setColor(107/255f, 107/255f,207/255f, 1);
-//            cc=cc/2;
-//            shapeRenderer.triangle(x1, y1, x1+cc, y1, x1, y1+cc);
-//            shapeRenderer.setColor(290/255f, 290/255f,290/255f, 1);
-//            shapeRenderer.circle(x1+cc,y1+cc, (cc*(2^1/2))/2);
-//            shapeRenderer.end();
+            if (block.isActive()) {
+                float x = block.getPosition().getX();
+                float y = block.getPosition().getY();
+                float gdxX = x;
+                float gdxY = h - y;
+                float gdxWidth = block.getSize().getX();
+                float gdxHeight = -block.getSize().getY();
+                shapeRenderer.setColor(1,0.8f,0, 1);
+                shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
+            }
         }
         Paddle paddle = gameBoard.getPaddle();
         shapeRenderer.setColor(1,.95f,0.2f, 1);

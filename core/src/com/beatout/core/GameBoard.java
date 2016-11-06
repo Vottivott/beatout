@@ -25,7 +25,7 @@ public class GameBoard extends Collideable {
     public final static int BAT_DISTANCE_TO_BOTTOM = 50;
     public final static float BAT_SPEED = 1.4f;
 
-    public static final float BALL_RADIUS = 10;//30;
+    public static final float BALL_RADIUS = 1;//10//30;
 
     public GameBoard(float width, float height) {
         this.width = width;
@@ -37,13 +37,20 @@ public class GameBoard extends Collideable {
         this.bottomY = batY - BALL_RADIUS*2;
     }
 
-    private void createTestLevel() {
+    public void createTestLevel() {
         blocks = new ArrayList<Block>();
         Vector size = new Vector(BLOCK_WIDTH, BLOCK_HEIGHT);
         Vector startPos = size.scale(2).add(0,BLOCK_HEIGHT*3);
         for (int i = 0; i < 7; i++) {
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+i*BLOCK_HEIGHT), size));
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+4)*BLOCK_HEIGHT), size));
+        }
+
+        //TEST RANDOMIZATION
+        for (Block block : blocks) {
+            if (Math.random() > 0.8) {
+                block.setActive(false);
+            }
         }
     }
 
@@ -68,6 +75,7 @@ public class GameBoard extends Collideable {
         Ball simulatedBall = ball;
         bounces.add(new PaddleCollision(simulatedBall.getPosition()));
 
+        List<Block> savedBlocks = copyBlocks(blocks); // Save block activations
         while (true) {
             Collision collision = calculateNextCollision(simulatedBall);
             bounces.add(collision);
@@ -76,33 +84,44 @@ public class GameBoard extends Collideable {
             }
             simulatedBall = new Ball(simulatedBall.getRadius(), collision.getPosition(), collision.getResultingDirection(simulatedBall.getDirection()));
         }
+        this.blocks = savedBlocks; // Restore block activations
 
         Trajectory trajectory = new Trajectory(bounces);
         return trajectory;
+    }
+
+    private List<Block> copyBlocks(List<Block> blocks) {
+        List<Block> copy = new ArrayList<Block>(blocks);
+        for (int i = 0; i < copy.size(); i++) {
+            copy.set(i, new Block(copy.get(i)));
+        }
+        return copy;
     }
 
     /**
      * Return the soonest upcoming collision for a given ball.
      */
     private Collision calculateNextCollision(final Ball ball) {
-        List<Collision> possibleBlockCollisions = getPossibleBlockCollisions(ball);
+        List<BlockCollision> possibleBlockCollisions = getPossibleBlockCollisions(ball);
         if (possibleBlockCollisions.size() > 0) {
-            return Collections.min(possibleBlockCollisions, new Comparator<Collision>() {
+            BlockCollision blockCollision = Collections.min(possibleBlockCollisions, new Comparator<Collision>() {
                 @Override
                 public int compare(Collision c1, Collision c2) {
                     return Float.compare(c1.getPosition().subtract(ball.getPosition()).lengthSquared(), c2.getPosition().subtract(ball.getPosition()).lengthSquared());
                 }
             });
+            blockCollision.getBlock().setActive(false);
+            return blockCollision;
         } else { // We only need to check for a boundary collision if there is no possible block collision
             return getPossibleBoundaryCollision(ball);
         }
     }
 
-    private List<Collision> getPossibleBlockCollisions(Ball ball) {
-        List<Collision> blockCollisions = new ArrayList<Collision>();
+    private List<BlockCollision> getPossibleBlockCollisions(Ball ball) {
+        List<BlockCollision> blockCollisions = new ArrayList<BlockCollision>();
         for (Block block : blocks) {
             if (block.isActive()) {
-                Collision collision = findCollision(ball, block);
+                BlockCollision collision = (BlockCollision)findCollision(ball, block);
                 if (collision != null) {
                     blockCollisions.add(collision);
                 }

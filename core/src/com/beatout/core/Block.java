@@ -13,6 +13,12 @@ public class Block extends Collideable {
         this.active = true;
     }
 
+    public Block(Block block) {
+        this.position = block.getPosition();
+        this.size = block.getSize();
+        this.active = block.isActive();
+    }
+
     public boolean isActive() {
         return active;
     }
