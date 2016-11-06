@@ -6,6 +6,8 @@ import com.beatout.math.Line;
 
 import java.util.*;
 
+import static com.beatout.core.Collision.Direction.*;
+
 public class GameBoard extends Collideable {
     private List<Block> blocks;
     private Paddle paddle;
@@ -23,7 +25,7 @@ public class GameBoard extends Collideable {
     public final static int BAT_DISTANCE_TO_BOTTOM = 50;
     public final static float BAT_SPEED = 1.4f;
 
-    public static final float BALL_RADIUS = 1;//30;
+    public static final float BALL_RADIUS = 10;//30;
 
     public GameBoard(float width, float height) {
         this.width = width;
@@ -31,7 +33,7 @@ public class GameBoard extends Collideable {
         createTestLevel();
         float batY = height - BAT_HEIGHT - BAT_DISTANCE_TO_BOTTOM;
         paddle = new Paddle(new Vector(BAT_WIDTH, BAT_HEIGHT), new com.beatout.math.Line(0, batY, width, batY), BAT_SPEED);
-        ball = new Ball(BALL_RADIUS, paddle.getPosition().add(paddle.getSize().getX()/2, -2*BALL_RADIUS), new Vector(-1, -1));
+        ball = new Ball(BALL_RADIUS, paddle.getPosition().add(paddle.getSize().getX()/2, -2*BALL_RADIUS), new Vector(-1, -1.7f));
         this.bottomY = batY - BALL_RADIUS*2;
     }
 
@@ -63,26 +65,16 @@ public class GameBoard extends Collideable {
 
     public Trajectory calculateTrajectory() {
         List<Collision> bounces = new ArrayList<Collision>();
-        // TODO: Continue testing
-        //TODO: The problem is that the ball gets stuck at the right boundary at (540,25)
         Ball simulatedBall = ball;
         bounces.add(new PaddleCollision(simulatedBall.getPosition()));
 
-        boolean finished = false;
-        while (!finished) {
+        while (true) {
             Collision collision = calculateNextCollision(simulatedBall);
             bounces.add(collision);
-
-            // TEST
-            if (simulatedBall.getPosition().equals(collision.getPosition())) {
-                finished = true;
+            if (collision instanceof BoundaryCollision && collision.getDirection() == BALL_FROM_TOP) {
+                break; // The ball returned to the bottom of the screen again
             }
-            // \TEST
-
             simulatedBall = new Ball(simulatedBall.getRadius(), collision.getPosition(), collision.getResultingDirection(simulatedBall.getDirection()));
-            if (simulatedBall.getPosition().getY() >= bottomY) { // If the ball returns to the bottom, the trajectory is finished
-                finished = true;
-            }
         }
 
         Trajectory trajectory = new Trajectory(bounces);
@@ -91,12 +83,20 @@ public class GameBoard extends Collideable {
 
     /**
      * Return the soonest upcoming collision for a given ball.
-     */
+     */ // TODO: Only calculate boundaryCollision if there are no block collisions (boundary is always further away than any block)
     private Collision calculateNextCollision(final Ball ball) {
         List<Collision> possibleCollisions = new ArrayList<Collision>();
         possibleCollisions.addAll(getPossibleBlockCollisions(ball));
-        possibleCollisions.addAll(getPossibleBoundaryCollisions(ball));
+        Collision boundaryCollision = getPossibleBoundaryCollision(ball);
+        if (boundaryCollision != null) {
+            possibleCollisions.add(boundaryCollision);
+        }
         // Find the collision position closest to the ball, that is, the collision position for the next object the ball will collide with
+
+        if (possibleCollisions.size() == 0) {
+            return null; //TEST
+        }
+
         Collision nextCollision = Collections.min(possibleCollisions, new Comparator<Collision>() {
             @Override
             public int compare(Collision c1, Collision c2) {
@@ -119,34 +119,95 @@ public class GameBoard extends Collideable {
         return blockCollisions;
     }
 
-    private List<Collision> getPossibleBoundaryCollisions(Ball ball) {
-        List<Collision> boundaryCollisions = new ArrayList<Collision>();
-        Collision boundaryCollision = findCollision(ball, this);
-        if (boundaryCollision != null) {
-            boundaryCollisions.add(boundaryCollision);
+    private Collision getPossibleBoundaryCollision(Ball ball) {
+        Line H = getPossibleHorizontalCollisionEdge(ball, this);
+        Line V = getPossibleVerticalCollisionEdge(ball, this);
+        Vector cCollision = null;
+        if (V != null) {
+            cCollision = BeatOutMath.getIntersectionBetweenVerticalLineSegmentAndLine(V.getStart().getX(), V.getStart().getY(), V.getEnd().getY(), ball.getCLine(), false);
         }
-        return boundaryCollisions;
+        if (cCollision == null) {
+            if (H != null) {
+                cCollision = BeatOutMath.getIntersectionBetweenHorizontalLineSegmentAndLine(H.getStart().getY(), H.getStart().getX(), H.getEnd().getX(), ball.getCLine(), false);
+            }
+            if (cCollision != null) {
+                return collideWith(ball.getPositionCoordinateFromC(cCollision), ball, false);
+            }
+        } else {
+            return collideWith(ball.getPositionCoordinateFromC(cCollision), ball, true);
+        }
+        return null;
     }
-
 
     /**
      * Find the point where the ball's line of movement intersects with the rectangular object, if any.
      * @return null if there is no collision point
      */
-    // TODO : Make trajectory calculation take ball radius into account
     public static Collision findCollision(Ball ball, Collideable collideable) {
-        List<Line> edges = getPossibleCollisionEdges(ball, collideable);
-        for (Line edge : edges) {
-            if (edge.isVertical()) {
-                Vector position = BeatOutMath.getIntersectionBetweenVerticalLineSegmentAndLine(edge.getStart().getX(), edge.getStart().getY(), edge.getEnd().getY(), ball.getDirectionLine(), true);
-                if (position != null) {
-                    return collideable.collideWith(position, true);
+        Line H = getPossibleHorizontalCollisionEdge(ball, collideable);
+        Line V = getPossibleVerticalCollisionEdge(ball, collideable);
+        Vector hCollision = null;
+        Vector vCollision = null;
+        Vector cCollision = null;
+        if (V != null) {
+            vCollision = BeatOutMath.getIntersectionBetweenVerticalLineSegmentAndLine(V.getStart().getX(), V.getStart().getY(), V.getEnd().getY(), ball.getVLine(), false);
+        }
+        if (vCollision != null) {
+            return collideable.collideWith(ball.getPositionCoordinateFromV(vCollision), ball, true);
+        } else {
+            if (H != null) {
+                hCollision = BeatOutMath.getIntersectionBetweenHorizontalLineSegmentAndLine(H.getStart().getY(), H.getStart().getX(), H.getEnd().getX(), ball.getHLine(), false);
+                if (hCollision != null) {
+                    return collideable.collideWith(ball.getPositionCoordinateFromH(hCollision), ball, false);
                 }
-            } else if (edge.isHorizontal()) {
-                Vector position = BeatOutMath.getIntersectionBetweenHorizontalLineSegmentAndLine(edge.getStart().getY(), edge.getStart().getX(), edge.getEnd().getX(), ball.getDirectionLine(), true);
-                if (position != null) {
-                    return collideable.collideWith(position, false);
+            }
+        }
+
+        if (V != null) {
+            cCollision = BeatOutMath.getIntersectionBetweenVerticalLineSegmentAndLine(V.getStart().getX(), V.getStart().getY(), V.getEnd().getY(), ball.getCLine(), false);
+        }
+        if (cCollision != null) {
+            return collideable.collideWith(ball.getPositionCoordinateFromC(cCollision), ball, true);
+        } else {
+            if (H != null) {
+                cCollision = BeatOutMath.getIntersectionBetweenHorizontalLineSegmentAndLine(H.getStart().getY(), H.getStart().getX(), H.getEnd().getX(), ball.getCLine(), false);
+                if (cCollision != null) {
+                    return collideable.collideWith(ball.getPositionCoordinateFromC(cCollision), ball, false);
                 }
+            }
+        }
+        return null;
+    }
+
+    public static Line getPossibleHorizontalCollisionEdge(Ball ball, RectBounded rect) {
+        if (ball.getTop() > rect.getBottom() && ball.getDirection().getY() < 0) {
+            return rect.getBottomLine();
+        } else if (ball.getBottom() < rect.getTop() && ball.getDirection().getY() > 0) {
+            return rect.getTopLine();
+        }
+        // Handle bouncing inside rect
+        if (ball.getRight() <= rect.getRight() && ball.getLeft() >= rect.getLeft() && ball.getTop() >= rect.getTop() && ball.getBottom() <= rect.getBottom()) {
+            if (ball.getDirection().getY() < 0) {
+                return rect.getTopLine();
+            } else {
+                return rect.getBottomLine();
+            }
+        }
+        return null;
+    }
+
+    public static Line getPossibleVerticalCollisionEdge(Ball ball, RectBounded rect) {
+        if (ball.getLeft() > rect.getRight() && ball.getDirection().getX() < 0) {
+            return rect.getRightLine();
+        } else if (ball.getRight() < rect.getLeft() && ball.getDirection().getX() > 0) {
+            return rect.getLeftLine();
+        }
+        // Handle bouncing inside rect
+        if (ball.getBottom() <= rect.getBottom() && ball.getTop() >= rect.getTop() && ball.getLeft() >= rect.getLeft() && ball.getRight() <= rect.getRight()) {
+            if (ball.getDirection().getX() < 0) {
+                return rect.getLeftLine();
+            } else {
+                return rect.getRightLine();
             }
         }
         return null;
@@ -187,8 +248,8 @@ public class GameBoard extends Collideable {
 
 
     @Override
-    public Collision collideWith(Vector collisionPoint, boolean verticalEdge) {
-        return new BoundaryCollision(collisionPoint, verticalEdge);
+    public Collision collideWith(Vector ballPosition, Collision.Direction direction) {
+        return new BoundaryCollision(ballPosition, direction);
     }
 
     @Override

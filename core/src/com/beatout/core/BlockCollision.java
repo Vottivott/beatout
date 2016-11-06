@@ -7,8 +7,8 @@ public class BlockCollision extends Collision {
     private final Block block;
     public static final String BLOCK_COLLISION_EVENT = "BlockCollisionEvent";
 
-    public BlockCollision(Vector position, boolean isVertical, Block block) {
-        super(position, isVertical);
+    public BlockCollision(Vector ballPosition, Direction direction, Block block) {
+        super(ballPosition, direction);
         this.block = block;
     }
 

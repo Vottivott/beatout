@@ -41,5 +41,16 @@ public abstract class RectBounded implements Positioned {
     public Line getRightLine() {
         return new Line(getPosition().add(getSize().getX(), 0), getPosition().add(getSize()));
     }
-
+    public Vector getTopLeft() {
+        return getPosition();
+    }
+    public Vector getTopRight() {
+        return getPosition().add(getSize().getX(), 0);
+    }
+    public Vector getBottomLeft() {
+        return getPosition().add(0, getSize().getY());
+    }
+    public Vector getBottomRight() {
+        return getPosition().add(getSize());
+    }
 }

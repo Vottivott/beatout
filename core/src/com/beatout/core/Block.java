@@ -32,7 +32,7 @@ public class Block extends Collideable {
     }
 
     @Override
-    public Collision collideWith(Vector collisionPoint, boolean verticalEdge) {
-        return new BlockCollision(collisionPoint, verticalEdge, this);
+    public Collision collideWith(Vector ballPosition, Collision.Direction direction) {
+        return new BlockCollision(ballPosition, direction, this);
     }
 }

@@ -7,38 +7,41 @@ public abstract class Collision implements Positioned {
 
     public abstract boolean isBlockCollision();
 
-    private Vector position;
-    private boolean isVertical;
+    private Vector ballPosition;
+    private Direction direction;
 
-    public Collision(Vector position, boolean isVertical) {
-        this.position = position;
-        this.isVertical = isVertical;
+    public Collision(Vector ballPosition, Direction direction) {
+        this.ballPosition = ballPosition;
+        this.direction = direction;
     }
 
     @Override
     public Vector getPosition() {
-        return position;
+        return ballPosition;
     }
 
     public boolean isVertical() {
-        return isVertical;
+        return direction == Direction.BALL_FROM_LEFT || direction == Direction.BALL_FROM_RIGHT;
     }
 
     public Vector getResultingDirection(Vector directionBeforeCollision) {
         float dirX = directionBeforeCollision.getX();
         float dirY = directionBeforeCollision.getY();
-        if (isVertical) {
-            if (directionBeforeCollision.getX() < 0) {
-                return new Vector(-dirY, dirX);
-            } else {
-                return new Vector(dirY, -dirX);
-            }
+//        float xSign = directionBeforeCollision.getX() < 0 ? -1 : 1;
+//        float ySign = directionBeforeCollision.getY() < 0 ? -1 : 1;
+//        float sign = xSign * ySign;
+        if (isVertical()) {
+            return new Vector(-dirX, dirY);
         } else {
-            if (directionBeforeCollision.getY() < 0) {
-                return new Vector(-dirY, dirX);
-            } else {
-                return new Vector(dirY, -dirX);
-            }
+            return new Vector(dirX, -dirY);
         }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public enum Direction {
+        BALL_FROM_LEFT, BALL_FROM_TOP, BALL_FROM_RIGHT, BALL_FROM_BOTTOM
     }
 }

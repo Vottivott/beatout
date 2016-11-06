@@ -29,7 +29,7 @@ public class Paddle extends Collideable { // Maybe not necessary to be a Collide
     }
 
     @Override
-    public Collision collideWith(Vector collisionPoint, boolean verticalEdge) {
-        return new PaddleCollision(collisionPoint);
+    public Collision collideWith(Vector ballPosition, Collision.Direction direction) {
+        return new PaddleCollision(ballPosition);
     }
 }
