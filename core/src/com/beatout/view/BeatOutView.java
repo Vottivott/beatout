@@ -94,6 +94,11 @@ public class BeatOutView extends ApplicationAdapter {
             beatOut.getGameBoard().createTestLevel();
             trajectory = beatOut.getGameBoard().calculateTrajectory();
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) { // DEBUGGING: Copy the current level to the clipboard
+            if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                Gdx.app.getClipboard().setContents(beatOut.getGameBoard().getBlockActivations());
+            }
+        }
     }
 
     @Override

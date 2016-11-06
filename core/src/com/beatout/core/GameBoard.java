@@ -1,10 +1,13 @@
 package com.beatout.core;
 
+import com.badlogic.gdx.Gdx;
 import com.beatout.math.BeatOutMath;
 import com.beatout.math.Vector;
 import com.beatout.math.Line;
 
 import java.util.*;
+
+import com.badlogic.gdx.utils.Clipboard;
 
 import static com.beatout.core.Collision.Direction.*;
 
@@ -25,7 +28,7 @@ public class GameBoard extends Collideable {
     public final static int BAT_DISTANCE_TO_BOTTOM = 50;
     public final static float BAT_SPEED = 1.4f;
 
-    public static final float BALL_RADIUS = 1;//10//30;
+    public static final float BALL_RADIUS = 10;//10//30;
 
     public GameBoard(float width, float height) {
         this.width = width;
@@ -52,6 +55,30 @@ public class GameBoard extends Collideable {
                 block.setActive(false);
             }
         }
+
+        //TEST NON-RANDOM ACTIVATION
+        setBlockActivations(Gdx.app.getClipboard().getContents());
+    }
+
+    // FOR DEBUG
+    private void setBlockActivations(String activationString) {
+        // 1 0 0 1 1 0 ... where 1 means active and 0 means inactive
+        String[] blockActivations = activationString.split(" ");
+        if (blockActivations.length != blocks.size()) {
+            return;
+        }
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks.get(i).setActive(blockActivations[i].equals("1"));
+        }
+    }
+
+    // FOR DEBUG
+    public String getBlockActivations() {
+        String a = "";
+        for (Block block : blocks) {
+            a += block.isActive() ? "1 " : "0 ";
+        }
+        return a;
     }
 
     public List<Block> getBlocks() {
