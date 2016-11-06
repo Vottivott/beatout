@@ -38,6 +38,8 @@ public class GameBoard extends Collideable {
         paddle = new Paddle(new Vector(BAT_WIDTH, BAT_HEIGHT), new com.beatout.math.Line(0, batY, width, batY), BAT_SPEED);
         ball = new Ball(BALL_RADIUS, paddle.getPosition().add(paddle.getSize().getX()/2, -2*BALL_RADIUS), new Vector(-1, -1.7f));
         this.bottomY = batY - BALL_RADIUS*2;
+        //TEST NON-RANDOM ACTIVATION
+        setBlockActivations(Gdx.app.getClipboard().getContents());
     }
 
     public void createTestLevel() {
@@ -56,8 +58,6 @@ public class GameBoard extends Collideable {
             }
         }
 
-        //TEST NON-RANDOM ACTIVATION
-        setBlockActivations(Gdx.app.getClipboard().getContents());
     }
 
     // FOR DEBUG
