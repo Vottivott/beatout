@@ -83,27 +83,19 @@ public class GameBoard extends Collideable {
 
     /**
      * Return the soonest upcoming collision for a given ball.
-     */ // TODO: Only calculate boundaryCollision if there are no block collisions (boundary is always further away than any block)
+     */
     private Collision calculateNextCollision(final Ball ball) {
-        List<Collision> possibleCollisions = new ArrayList<Collision>();
-        possibleCollisions.addAll(getPossibleBlockCollisions(ball));
-        Collision boundaryCollision = getPossibleBoundaryCollision(ball);
-        if (boundaryCollision != null) {
-            possibleCollisions.add(boundaryCollision);
+        List<Collision> possibleBlockCollisions = getPossibleBlockCollisions(ball);
+        if (possibleBlockCollisions.size() > 0) {
+            return Collections.min(possibleBlockCollisions, new Comparator<Collision>() {
+                @Override
+                public int compare(Collision c1, Collision c2) {
+                    return Float.compare(c1.getPosition().subtract(ball.getPosition()).lengthSquared(), c2.getPosition().subtract(ball.getPosition()).lengthSquared());
+                }
+            });
+        } else { // We only need to check for a boundary collision if there is no possible block collision
+            return getPossibleBoundaryCollision(ball);
         }
-        // Find the collision position closest to the ball, that is, the collision position for the next object the ball will collide with
-
-        if (possibleCollisions.size() == 0) {
-            return null; //TEST
-        }
-
-        Collision nextCollision = Collections.min(possibleCollisions, new Comparator<Collision>() {
-            @Override
-            public int compare(Collision c1, Collision c2) {
-                return Float.compare(c1.getPosition().subtract(ball.getPosition()).lengthSquared(), c2.getPosition().subtract(ball.getPosition()).lengthSquared());
-            }
-        });
-        return nextCollision;
     }
 
     private List<Collision> getPossibleBlockCollisions(Ball ball) {
@@ -120,8 +112,8 @@ public class GameBoard extends Collideable {
     }
 
     private Collision getPossibleBoundaryCollision(Ball ball) {
-        Line H = getPossibleHorizontalCollisionEdge(ball, this);
-        Line V = getPossibleVerticalCollisionEdge(ball, this);
+        Line H = getPossibleHorizontalCollisionEdgeFromInside(ball, this);
+        Line V = getPossibleVerticalCollisionEdgeFromInside(ball, this);
         Vector cCollision = null;
         if (V != null) {
             cCollision = BeatOutMath.getIntersectionBetweenVerticalLineSegmentAndLine(V.getStart().getX(), V.getStart().getY(), V.getEnd().getY(), ball.getCLine(), false);
@@ -185,15 +177,15 @@ public class GameBoard extends Collideable {
         } else if (ball.getBottom() < rect.getTop() && ball.getDirection().getY() > 0) {
             return rect.getTopLine();
         }
-        // Handle bouncing inside rect
-        if (ball.getRight() <= rect.getRight() && ball.getLeft() >= rect.getLeft() && ball.getTop() >= rect.getTop() && ball.getBottom() <= rect.getBottom()) {
-            if (ball.getDirection().getY() < 0) {
-                return rect.getTopLine();
-            } else {
-                return rect.getBottomLine();
-            }
-        }
         return null;
+    }
+
+    public static Line getPossibleHorizontalCollisionEdgeFromInside(Ball ball, RectBounded rect) {
+        if (ball.getDirection().getY() < 0) {
+            return rect.getTopLine();
+        } else {
+            return rect.getBottomLine();
+        }
     }
 
     public static Line getPossibleVerticalCollisionEdge(Ball ball, RectBounded rect) {
@@ -202,15 +194,15 @@ public class GameBoard extends Collideable {
         } else if (ball.getRight() < rect.getLeft() && ball.getDirection().getX() > 0) {
             return rect.getLeftLine();
         }
-        // Handle bouncing inside rect
-        if (ball.getBottom() <= rect.getBottom() && ball.getTop() >= rect.getTop() && ball.getLeft() >= rect.getLeft() && ball.getRight() <= rect.getRight()) {
-            if (ball.getDirection().getX() < 0) {
-                return rect.getLeftLine();
-            } else {
-                return rect.getRightLine();
-            }
-        }
         return null;
+    }
+
+    public static Line getPossibleVerticalCollisionEdgeFromInside(Ball ball, RectBounded rect) {
+        if (ball.getDirection().getX() < 0) {
+            return rect.getLeftLine();
+        } else {
+            return rect.getRightLine();
+        }
     }
 
     /**
