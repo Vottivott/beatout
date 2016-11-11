@@ -14,7 +14,7 @@ public class BlockCollision extends Collision {
 
     @Override
     public void performCollision() {
-        block.setActive(false); //TODO: The problem is that the block is already inactive since the simulation
+        block.setActive(false);
         NotificationManager.getDefault().registerEvent(BLOCK_COLLISION_EVENT, this);
     }
 

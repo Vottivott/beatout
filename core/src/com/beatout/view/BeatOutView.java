@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import com.beatout.core.*;
 import com.beatout.math.Line;
-import com.beatout.math.Vector;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class BeatOutView extends ApplicationAdapter {
     RayHandler rayHandler;
 	World world;
 	OrthographicCamera camera;
-    private List<CollisionEffect> collisionEffects;
+    private List<CollisionEffect> collisionEffects = new ArrayList<CollisionEffect>();
 
     Trajectory trajectory; // For debugging
 
@@ -41,7 +40,16 @@ public class BeatOutView extends ApplicationAdapter {
         NotificationManager.getDefault().addObserver(BlockCollision.BLOCK_COLLISION_EVENT, new NotificationManager.EventHandler<BlockCollision>() {
             @Override
             public void handleEvent(NotificationManager.Event<BlockCollision> event) {
-                System.out.println("Event test");
+                System.out.println("Block collision");
+                createCollisionEffect(event.data);
+            }
+        });
+
+        NotificationManager.getDefault().addObserver(BoundaryCollision.BOUNDARY_COLLISION_EVENT, new NotificationManager.EventHandler<BlockCollision>() {
+            @Override
+            public void handleEvent(NotificationManager.Event<BlockCollision> event) {
+                System.out.println("Boundary collision");
+                createCollisionEffect(event.data);
             }
         });
 
@@ -56,8 +64,8 @@ public class BeatOutView extends ApplicationAdapter {
 		float y = 200;
 //		new PointLight(rayHandler, 100, new Color(1,1,1,1), distance, x, y);
 
-        collisionEffects = new ArrayList<CollisionEffect>();
-        collisionEffects.add(new CollisionEffect(new Vector(x,y), rayHandler));
+//        collisionEffects = new ArrayList<CollisionEffect>();
+//        collisionEffects.add(new CollisionEffect(new Vector(x,y), rayHandler));
 
 //        new ConeLight(rayHandler, numRays, new Color(1,.5f,0,1), distance, x, y, 180, 90);
 //		new ConeLight(rayHandler, numRays, new Color(1,.5f,0,1), distance*.7f, x, y, 190, 10);
@@ -78,7 +86,12 @@ public class BeatOutView extends ApplicationAdapter {
         trajectory = beatOut.getGameBoard().calculateTrajectory();
 	}
 
-	public void update() {
+    private void createCollisionEffect(Collision collision) {
+        CollisionEffect collisionEffect = new CollisionEffect(collision, beatOut.getBallRadius(), rayHandler);
+        collisionEffects.add(collisionEffect);
+    }
+
+    public void update() {
         float right = Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0;
         float left = Gdx.input.isKeyPressed(Input.Keys.LEFT) ? 1 : 0;
         float direction = right - left;

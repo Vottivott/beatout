@@ -32,6 +32,7 @@ public class BallAnimator {
         if (bounceIndex != lastBounceIndex) {
             Collision bounce = trajectory.getBounce(bounceIndex);
             bounce.performCollision();
+            lastBounceIndex = bounceIndex;
         }
         ball.setPosition(trajectory.getPosition(point));
     }
