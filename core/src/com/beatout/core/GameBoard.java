@@ -102,9 +102,9 @@ public class GameBoard extends Collideable {
         Ball simulatedBall = new Ball(ball);
         bounces.add(new PaddleCollision(simulatedBall.getPosition()));
 
-        List<Block> savedBlocks = copyBlocks(blocks); // Save block activations
+        List<Block> modifiedBlocks = new ArrayList<Block>();
         while (true) {
-            Collision collision = calculateNextCollision(simulatedBall);
+            Collision collision = calculateNextCollision(simulatedBall, modifiedBlocks);
             bounces.add(collision);
             if (collision instanceof BoundaryCollision && collision.getDirection() == BALL_FROM_TOP) {
                 break; // The ball returned to the bottom of the screen again
@@ -113,10 +113,11 @@ public class GameBoard extends Collideable {
             simulatedBall.setDirection(collision.getResultingDirection(simulatedBall.getDirection()));
             simulatedBall.calculateHVCPoints();
         }
-        this.blocks = savedBlocks; // Restore block activations
+        for (Block block : modifiedBlocks) { // Restore block activations
+            block.setActive(true);
+        }
 
-        Trajectory trajectory = new Trajectory(bounces);
-        return trajectory;
+        return new Trajectory(bounces);
     }
 
     private List<Block> copyBlocks(List<Block> blocks) {
@@ -130,7 +131,7 @@ public class GameBoard extends Collideable {
     /**
      * Return the soonest upcoming collision for a given ball.
      */
-    private Collision calculateNextCollision(final Ball ball) {
+    private Collision calculateNextCollision(final Ball ball, List<Block> modifiedBlocks) {
         List<BlockCollision> possibleBlockCollisions = getPossibleBlockCollisions(ball);
         if (possibleBlockCollisions.size() > 0) {
             BlockCollision blockCollision = Collections.min(possibleBlockCollisions, new Comparator<Collision>() {
@@ -140,6 +141,7 @@ public class GameBoard extends Collideable {
                 }
             });
             blockCollision.getBlock().setActive(false);
+            modifiedBlocks.add(blockCollision.getBlock());
             return blockCollision;
         } else { // We only need to check for a boundary collision if there is no possible block collision
             return getPossibleBoundaryCollision(ball);
