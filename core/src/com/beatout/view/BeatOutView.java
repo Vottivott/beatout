@@ -141,7 +141,9 @@ public class BeatOutView extends ApplicationAdapter {
         float gdxHeight = -paddle.getSize().getY();
         shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
 
-        drawTrajectory(trajectory, shapeRenderer);
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            drawTrajectory(trajectory, shapeRenderer);
+        }
 
         Ball ball = gameBoard.getBall();
         shapeRenderer.setColor(1,1,1,1);
