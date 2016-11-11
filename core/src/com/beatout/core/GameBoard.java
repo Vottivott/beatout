@@ -99,7 +99,7 @@ public class GameBoard extends Collideable {
 
     public Trajectory calculateTrajectory() {
         List<Collision> bounces = new ArrayList<Collision>();
-        Ball simulatedBall = ball;
+        Ball simulatedBall = new Ball(ball);
         bounces.add(new PaddleCollision(simulatedBall.getPosition()));
 
         List<Block> savedBlocks = copyBlocks(blocks); // Save block activations
@@ -109,7 +109,9 @@ public class GameBoard extends Collideable {
             if (collision instanceof BoundaryCollision && collision.getDirection() == BALL_FROM_TOP) {
                 break; // The ball returned to the bottom of the screen again
             }
-            simulatedBall = new Ball(simulatedBall.getRadius(), collision.getPosition(), collision.getResultingDirection(simulatedBall.getDirection()));
+            simulatedBall.setPosition(collision.getPosition());
+            simulatedBall.setDirection(collision.getResultingDirection(simulatedBall.getDirection()));
+            simulatedBall.calculateHVCPoints();
         }
         this.blocks = savedBlocks; // Restore block activations
 

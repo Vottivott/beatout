@@ -8,6 +8,7 @@ public class BeatOut {
 
     private GameBoard gameBoard;
 
+    private BallAnimator ballAnimator;
     private Trajectory currentTrajectory;
     private TimePlanner timePlanner;
     private TimePlan timePlan;
@@ -16,14 +17,14 @@ public class BeatOut {
     public BeatOut(float width, float height) {
         this.gameBoard = new GameBoard(width, height);
 
-
-
         QuantizationTimePlanner planner = new QuantizationTimePlanner();
         planner.setSmallestBeat(NoteValues.EIGHTH_NOTE);
         this.timePlanner = planner;
 
-//        currentTrajectory = gameBoard.calculateTrajectory();
-//        timePlan = timePlanner.getTimePlan(currentTrajectory);
+        currentTrajectory = gameBoard.calculateTrajectory();
+        timePlan = timePlanner.getTimePlan(currentTrajectory);
+
+        this.ballAnimator = new BallAnimator(gameBoard.getBall(), currentTrajectory, timePlan);
     }
 
     public GameBoard getGameBoard() {
@@ -31,8 +32,7 @@ public class BeatOut {
     }
 
     public void update(float deltaTime) {
-        // TODO: Add simulation of future trajectory and time planning
-
+        ballAnimator.update(deltaTime);
     }
 
     public void moveBat(float direction, float deltaTime) {

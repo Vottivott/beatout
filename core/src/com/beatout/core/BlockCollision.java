@@ -14,7 +14,7 @@ public class BlockCollision extends Collision {
 
     @Override
     public void performCollision() {
-        // TODO: Add deactivation of block from model here
+        block.setActive(false); //TODO: The problem is that the block is already inactive since the simulation
         NotificationManager.getDefault().registerEvent(BLOCK_COLLISION_EVENT, this);
     }
 

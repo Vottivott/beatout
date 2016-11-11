@@ -28,6 +28,10 @@ public class Trajectory {
         return bounces;
     }
 
+    public Collision getBounce(int bounceIndex) {
+        return bounces.get(bounceIndex);
+    }
+
     public float getTotalDistance() {
         float distance = 0;
         for (int bounce = 0; bounce < bounces.size()-1; bounce++) {

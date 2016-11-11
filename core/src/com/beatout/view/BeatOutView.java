@@ -91,7 +91,8 @@ public class BeatOutView extends ApplicationAdapter {
 
     private void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            beatOut.getGameBoard().createTestLevel();
+            beatOut = new BeatOut(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            //beatOut.getGameBoard().createTestLevel();
             trajectory = beatOut.getGameBoard().calculateTrajectory();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) { // DEBUGGING: Copy the current level to the clipboard
@@ -139,7 +140,16 @@ public class BeatOutView extends ApplicationAdapter {
         float gdxWidth = paddle.getSize().getX();
         float gdxHeight = -paddle.getSize().getY();
         shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
+
         drawTrajectory(trajectory, shapeRenderer);
+
+        Ball ball = gameBoard.getBall();
+        shapeRenderer.setColor(1,1,1,1);
+        gdxX = ball.getPosition().getX();
+        gdxY = h - ball.getPosition().getY();
+        gdxWidth = ball.getSize().getX();
+        gdxHeight = -ball.getSize().getY();
+        shapeRenderer.rect(gdxX, gdxY, gdxWidth, gdxHeight);
 
         shapeRenderer.end();
 	}

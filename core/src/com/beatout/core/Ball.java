@@ -3,11 +3,11 @@ package com.beatout.core;
 import com.beatout.math.*;
 import com.beatout.math.Line;
 
-// Immutable
+
 public class Ball extends RectBounded {
     private final float radius;
-    private final Vector position;
-    private final Vector direction;
+    private Vector position;
+    private Vector direction;
 
     // HVC points are three corner points of the ball's rect, defined by the direction of the ball where:
     // c = the corner most directly pointed in the direction of the ball
@@ -26,12 +26,24 @@ public class Ball extends RectBounded {
         calculateHVCPoints();
     }
 
+    public Ball(Ball ball) {
+        this(ball.getRadius(), ball.getPosition(), ball.getDirection());
+    }
+
     public float getRadius() {
         return radius;
     }
 
+    public void setDirection(Vector direction) {
+        this.direction = direction;
+    }
+
     public Vector getDirection() {
         return direction;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
     }
 
     @Override
@@ -48,7 +60,7 @@ public class Ball extends RectBounded {
         return new Line(position, position.add(direction));
     }
 
-    private void calculateHVCPoints() {
+    public void calculateHVCPoints() {
         float dx = this.getDirection().getX();
         float dy = this.getDirection().getY();
         if (dx >= 0 && dy > 0) {
