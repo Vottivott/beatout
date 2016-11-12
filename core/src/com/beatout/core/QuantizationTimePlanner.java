@@ -9,7 +9,7 @@ public class QuantizationTimePlanner implements TimePlanner {
 
     private int timeSignatureUpper = 4;
     private int timeSignatureLower = 4;
-    private float smallestBeat = NoteValues.EIGHTH_NOTE;
+    private float smallestBeat = NoteValues.THIRTYSECOND_NOTE; //NoteValues.EIGHTH_NOTE;
 
     public void setTimeSignature(int upper, int lower) {
         this.timeSignatureUpper = upper;
@@ -31,11 +31,17 @@ public class QuantizationTimePlanner implements TimePlanner {
             timePositions.set(i, getClosestTimePosition(p));
         }
 
+//        getPossibleBeatPlans(timePositions.size());
+
 
 
         TimePlan timePlan = new LinearTimePlan(timePositions);
 
         return timePlan;
+    }
+
+    private void getPossibleBeatPlans(int size) {
+
     }
 
     private float getClosestTimePosition(float p) {

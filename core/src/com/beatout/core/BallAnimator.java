@@ -9,7 +9,7 @@ public class BallAnimator {
 
     private Runnable onFinished;
 
-    private float timeDuration = 2;
+    private float timeDuration = 4;
     private float time = 0;
     private int lastBounceIndex = -1;
 
@@ -29,15 +29,17 @@ public class BallAnimator {
             }
         }
 
-        if (Math.round(time/timeDuration * 4) != Math.round((time - deltaTime)/timeDuration * 4)) { // Test
+        if (Math.round(time/timeDuration * 8) != Math.round((time - deltaTime)/timeDuration * 8)) { // Test
             NotificationManager.getDefault().registerEvent(TEST_BEAT_EVENT, this);
         }
 
         Trajectory.PointOnTrajectory point = timePlan.getPointOnTrajectory(time / timeDuration);
         int bounceIndex = point.getBounceIndex();
         if (bounceIndex != lastBounceIndex) {
-            Collision bounce = trajectory.getBounce(bounceIndex);
-            bounce.performCollision();
+            for (int i = lastBounceIndex+1; i <= bounceIndex; i++) {
+                Collision bounce = trajectory.getBounce(i);
+                bounce.performCollision();
+            }
             lastBounceIndex = bounceIndex;
         }
         ball.setPosition(trajectory.getPosition(point));

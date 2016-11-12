@@ -20,7 +20,7 @@ public class BeatOut {
         this.gameBoard = new GameBoard(width, height);
 
         QuantizationTimePlanner planner = new QuantizationTimePlanner();
-        planner.setSmallestBeat(NoteValues.EIGHTH_NOTE);
+//        planner.setSmallestBeat(NoteValues.EIGHTH_NOTE);
         this.timePlanner = planner;
 
         currentTrajectory = gameBoard.calculateTrajectory();
