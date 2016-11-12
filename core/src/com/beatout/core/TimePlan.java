@@ -5,4 +5,6 @@ package com.beatout.core;
  */
 public interface TimePlan {
     Trajectory.PointOnTrajectory getPointOnTrajectory(float time);
+
+
 }

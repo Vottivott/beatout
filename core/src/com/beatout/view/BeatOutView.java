@@ -4,6 +4,7 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,8 +33,18 @@ public class BeatOutView extends ApplicationAdapter {
     Trajectory trajectory; // For debugging
 
 
+    Sound bass;
+    Sound hihat;
+    Sound hihat2;
+
     @Override
 	public void create () {
+
+        // Test sound
+        bass = Gdx.audio.newSound(Gdx.files.internal("sounds/bass.wav"));
+        hihat = Gdx.audio.newSound(Gdx.files.internal("sounds/hihat.wav"));
+        hihat2 = Gdx.audio.newSound(Gdx.files.internal("sounds/hihat2.wav"));
+        // \test sound
 
         beatOut = new BeatOut(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -42,6 +53,7 @@ public class BeatOutView extends ApplicationAdapter {
             public void handleEvent(NotificationManager.Event<BlockCollision> event) {
                 System.out.println("Block collision");
                 createCollisionEffect(event.data);
+                hihat.play();
             }
         });
 
@@ -50,8 +62,19 @@ public class BeatOutView extends ApplicationAdapter {
             public void handleEvent(NotificationManager.Event<BlockCollision> event) {
                 System.out.println("Boundary collision");
                 createCollisionEffect(event.data);
+                hihat2.play();
             }
         });
+
+
+
+        NotificationManager.getDefault().addObserver(BeatOut.TEST_BEAT_EVENT, new NotificationManager.EventHandler<BeatOut>() {
+            @Override
+            public void handleEvent(NotificationManager.Event<BeatOut> event) {
+                bass.play();
+            }
+        });
+        //NotificationManager.getDefault().addObserver(/*4thBeat*/);
 
 		batch = new SpriteBatch();
 //		img = new Texture("badlogic.jpg");

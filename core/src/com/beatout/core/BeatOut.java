@@ -14,6 +14,8 @@ public class BeatOut {
     private TimePlan timePlan;
     private float time;
 
+    public static String TEST_BEAT_EVENT = "testBeatoutEvent";
+
     public BeatOut(float width, float height) {
         this.gameBoard = new GameBoard(width, height);
 

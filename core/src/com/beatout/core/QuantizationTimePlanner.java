@@ -25,9 +25,22 @@ public class QuantizationTimePlanner implements TimePlanner {
 
         List<Float> timePositions = getTimePositionsBasedOnConstantSpeed(trajectory);
         // TODO: Implement quantization
+
+        for (int i = 0; i < timePositions.size(); i++) {
+            float p = timePositions.get(i);
+            timePositions.set(i, getClosestTimePosition(p));
+        }
+
+
+
         TimePlan timePlan = new LinearTimePlan(timePositions);
 
         return timePlan;
+    }
+
+    private float getClosestTimePosition(float p) {
+        double numOfSmallestUnits = Math.round(p / smallestBeat);
+        return (float)(numOfSmallestUnits * smallestBeat);
     }
 
     private List<Float> getTimePositionsBasedOnConstantSpeed(Trajectory trajectory) {

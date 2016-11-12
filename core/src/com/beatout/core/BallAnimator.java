@@ -1,5 +1,7 @@
 package com.beatout.core;
 
+import static com.beatout.core.BeatOut.TEST_BEAT_EVENT;
+
 public class BallAnimator {
     private Ball ball;
     private Trajectory trajectory;
@@ -7,7 +9,7 @@ public class BallAnimator {
 
     private Runnable onFinished;
 
-    private float timeDuration = 5;
+    private float timeDuration = 2;
     private float time = 0;
     private int lastBounceIndex = -1;
 
@@ -25,6 +27,10 @@ public class BallAnimator {
             if (onFinished != null) {
                 onFinished.run();
             }
+        }
+
+        if (Math.round(time/timeDuration * 4) != Math.round((time - deltaTime)/timeDuration * 4)) { // Test
+            NotificationManager.getDefault().registerEvent(TEST_BEAT_EVENT, this);
         }
 
         Trajectory.PointOnTrajectory point = timePlan.getPointOnTrajectory(time / timeDuration);
