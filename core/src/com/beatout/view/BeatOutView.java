@@ -36,6 +36,7 @@ public class BeatOutView extends ApplicationAdapter {
     Sound bass;
     Sound hihat;
     Sound hihat2;
+    Sound open_hihat;
 
     @Override
 	public void create () {
@@ -44,6 +45,7 @@ public class BeatOutView extends ApplicationAdapter {
         bass = Gdx.audio.newSound(Gdx.files.internal("sounds/bass.wav"));
         hihat = Gdx.audio.newSound(Gdx.files.internal("sounds/hihat.wav"));
         hihat2 = Gdx.audio.newSound(Gdx.files.internal("sounds/hihat2.wav"));
+        open_hihat = Gdx.audio.newSound(Gdx.files.internal("sounds/open_hihat.wav"));
         // \test sound
 
         beatOut = new BeatOut(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -74,6 +76,14 @@ public class BeatOutView extends ApplicationAdapter {
                 bass.play();
             }
         });
+        NotificationManager.getDefault().addObserver(BeatOut.CYCLE_END, new NotificationManager.EventHandler<BeatOut>() {
+            @Override
+            public void handleEvent(NotificationManager.Event<BeatOut> event) {
+                trajectory = beatOut.getGameBoard().calculateTrajectory();
+                open_hihat.play();
+            }
+        });
+
         //NotificationManager.getDefault().addObserver(/*4thBeat*/);
 
 		batch = new SpriteBatch();

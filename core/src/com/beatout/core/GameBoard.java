@@ -32,7 +32,8 @@ public class GameBoard extends Collideable {
 
     public GameBoard(float width, float height) {
         this.width = width;
-        this.height = height;
+        this.height = height - BAT_DISTANCE_TO_BOTTOM - BAT_HEIGHT; // Test
+//        this.height = height;
         createTestLevel();
         float batY = height - BAT_HEIGHT - BAT_DISTANCE_TO_BOTTOM;
         paddle = new Paddle(new Vector(BAT_WIDTH, BAT_HEIGHT), new com.beatout.math.Line(0, batY, width, batY), BAT_SPEED);
@@ -49,6 +50,8 @@ public class GameBoard extends Collideable {
         for (int i = 0; i < 7; i++) {
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+i*BLOCK_HEIGHT), size));
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+4)*BLOCK_HEIGHT), size));
+            blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+8)*BLOCK_HEIGHT), size));
+            blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+12)*BLOCK_HEIGHT), size));
         }
 
         //TEST RANDOMIZATION

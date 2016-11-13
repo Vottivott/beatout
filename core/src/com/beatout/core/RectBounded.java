@@ -53,4 +53,11 @@ public abstract class RectBounded implements Positioned {
     public Vector getBottomRight() {
         return getPosition().add(getSize());
     }
+
+    public float getCenterX() {
+        return getPosition().getX() + getSize().getX() / 2;
+    }
+    public float getCenterY() {
+        return getPosition().getY() + getSize().getY() / 2;
+    }
 }

@@ -24,9 +24,15 @@ public class BallAnimator {
 
         if (time > timeDuration) {
             time = time - timeDuration;
+
+//            Trajectory.PointOnTrajectory point = timePlan.getPointOnTrajectory(0.999f);
+//            ball.setPosition(trajectory.getPosition(point));
+//            ball.setDirection(trajectory.getDirection(point));
+
             if (onFinished != null) {
                 onFinished.run();
             }
+            return;
         }
 
         if (Math.round(time/timeDuration * 8) != Math.round((time - deltaTime)/timeDuration * 8)) { // Test
@@ -43,6 +49,15 @@ public class BallAnimator {
             lastBounceIndex = bounceIndex;
         }
         ball.setPosition(trajectory.getPosition(point));
+        ball.setDirection(trajectory.getDirection(point));
+    }
+
+    public void setTrajectory(Trajectory trajectory) {
+        this.trajectory = trajectory;
+    }
+
+    public void setTimePlan(TimePlan timePlan) {
+        this.timePlan = timePlan;
     }
 
     public void setOnFinished(Runnable onFinished) {

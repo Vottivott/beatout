@@ -53,6 +53,12 @@ public class Trajectory {
         return lines;
     }
 
+    public Vector getDirection(PointOnTrajectory point) {
+        Vector from = bounces.get(point.getBounceIndex()+1).getPosition();
+        Vector to = bounces.get(point.getBounceIndex()).getPosition();
+        return to.subtract(from);
+    }
+
     /**
      * Represents a point on the trajectory by the index of the latest collision that will happen before being at that point,
      * and the fractional position on the line between this last collision and the next one
