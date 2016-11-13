@@ -26,7 +26,7 @@ public class GameBoard extends Collideable {
     public final static int BAT_WIDTH = 150;
     public final static int BAT_HEIGHT = 25;
     public final static int BAT_DISTANCE_TO_BOTTOM = 50;
-    public final static float BAT_SPEED = 1.4f;
+    public final static float BAT_SPEED = 2f;
 
     public static final float BALL_RADIUS = 10;//10//30;
 
@@ -52,6 +52,9 @@ public class GameBoard extends Collideable {
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+4)*BLOCK_HEIGHT), size));
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+8)*BLOCK_HEIGHT), size));
             blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i+12)*BLOCK_HEIGHT), size));
+            blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i-1)*BLOCK_HEIGHT), size));
+            blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i-2)*BLOCK_HEIGHT), size));
+            blocks.add(new Block(new Vector(startPos.getX()+i*BLOCK_WIDTH,startPos.getY()+(i-3)*BLOCK_HEIGHT), size));
         }
 
         //TEST RANDOMIZATION

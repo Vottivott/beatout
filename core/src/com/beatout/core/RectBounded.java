@@ -60,4 +60,12 @@ public abstract class RectBounded implements Positioned {
     public float getCenterY() {
         return getPosition().getY() + getSize().getY() / 2;
     }
+
+    public float getWidth() {
+        return getSize().getX();
+    }
+
+    public float getHeight() {
+        return getSize().getX();
+    }
 }

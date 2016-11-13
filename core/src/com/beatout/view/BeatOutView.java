@@ -1,16 +1,18 @@
 package com.beatout.view;
 
+import box2dLight.ConeLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -89,6 +91,27 @@ public class BeatOutView extends ApplicationAdapter {
 		batch = new SpriteBatch();
 //		img = new Texture("badlogic.jpg");
 		World world = new World(new Vector2(0,0), false);
+        // TEST WORLD
+//        float h = Gdx.graphics.getHeight();
+//        for (Block b : beatOut.getGameBoard().getBlocks()) {
+//            PolygonShape polygonShape = new PolygonShape();
+//            polygonShape.setAsBox(b.getWidth()/2, b.getHeight()/2, new Vector2(b.getLeft(), h-b.getTop()), 0);
+////            polygonShape.setAsBox(b.getWidth(), b.getHeight());
+////            ChainShape chainShape = new ChainShape();
+////            chainShape.createLoop(new Vector2[] {
+////                    new Vector2(b.getLeft(), h-b.getTop()),
+////                    new Vector2(b.getRight(), h-b.getTop()),
+////                    new Vector2(b.getRight(), h-b.getBottom()),
+////                    new Vector2(b.getLeft(), h-b.getBottom()) });
+//            BodyDef chainBodyDef = new BodyDef();
+//            chainBodyDef.type = BodyDef.BodyType.StaticBody;
+//            Body groundBody = world.createBody(chainBodyDef);
+////            groundBody.createFixture(chainShape, 0);
+////            chainShape.dispose();
+//            groundBody.createFixture(polygonShape, 0);
+//            polygonShape.dispose();
+//        }
+        //\WORLD
         shapeRenderer = new ShapeRenderer();
         rayHandler = new RayHandler(world);
 		int numRays = 200;
@@ -102,7 +125,7 @@ public class BeatOutView extends ApplicationAdapter {
 
 //        new ConeLight(rayHandler, numRays, new Color(1,.5f,0,1), distance, x, y, 180, 90);
 //		new ConeLight(rayHandler, numRays, new Color(1,.5f,0,1), distance*.7f, x, y, 190, 10);
-//		new ConeLight(rayHandler, numRays, new Color(1,.5f,0,1), distance*.7f, x, y, 170, 10);
+//		new ConeLight(rayHandler, numRays, new Color(1,.5f,0,1), 1000, 600, y, 170, 350);
 
 
 //        rayHandler.setAmbientLight(.2f);
