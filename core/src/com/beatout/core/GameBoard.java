@@ -39,8 +39,26 @@ public class GameBoard extends Collideable {
         paddle = new Paddle(new Vector(BAT_WIDTH, BAT_HEIGHT), new com.beatout.math.Line(0, batY, width, batY), BAT_SPEED);
         ball = new Ball(BALL_RADIUS, paddle.getPosition().add(paddle.getSize().getX()/2, -2*BALL_RADIUS), new Vector(-1, -1.7f));
         this.bottomY = batY - BALL_RADIUS*2;
+
+//        setStateFromClipboard();
+    }
+
+    public void setStateFromClipboard() {
         //TEST NON-RANDOM ACTIVATION
-        setBlockActivations(Gdx.app.getClipboard().getContents());
+        String clip = Gdx.app.getClipboard().getContents();
+        String str[] = clip.split(";");
+        if (str.length == 2) {
+        setBlockActivations(str[0]);
+        setBallState(str[1]);
+        }
+    }
+
+    private void setBallState(String ballString) {
+        String state[] = ballString.split(" ");
+        if (state.length == 4) {
+        ball.setPosition(new Vector(Float.valueOf(state[0]), Float.valueOf(state[1])));
+        ball.setDirection(new Vector(Float.valueOf(state[2]), Float.valueOf(state[3])));
+        }
     }
 
     public void createTestLevel() {
@@ -308,5 +326,9 @@ public class GameBoard extends Collideable {
     @Override
     public Vector getSize() {
         return new Vector(width, height);
+    }
+
+    public String getBallString() {
+        return ball.getPosition().getX() + " " + ball.getPosition().getY() + " " + ball.getDirection().getX() + " " + ball.getDirection().getY();
     }
 }
