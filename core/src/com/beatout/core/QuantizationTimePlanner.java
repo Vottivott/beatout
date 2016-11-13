@@ -33,12 +33,44 @@ public class QuantizationTimePlanner implements TimePlanner {
 
 //        getPossibleBeatPlans(timePositions.size());
 
-
+        setBounceIntensities(trajectory, timePositions);
 
         TimePlan timePlan = new LinearTimePlan(timePositions);
 
         return timePlan;
     }
+
+    private void setBounceIntensities(Trajectory trajectory, List<Float> timePositions) {
+        for (int i = 0; i < timePositions.size(); i++) {
+            float t = timePositions.get(i);
+//            trajectory.getBounce(i).setIntensity(getIntensity(t, timePositions));
+            trajectory.getBounce(i).setIntensity(1);//getIntensity(t, timePositions));
+        }
+    }
+
+    private float getIntensity(float t, List<Float> timePositions) {
+        float factor = 0;
+        int numCounted = 0;
+        for (float p : timePositions) {
+            if (dist(t,p) > 0.01) {
+                factor += 1f / (1+squareDist(t, p));
+                numCounted++;
+            }
+        }
+        if (numCounted == 0) {
+            return 1;
+        }
+        return factor/numCounted + 1;
+    }
+
+    private float squareDist(float t, float p) {
+        return (t-p)*(t-p);
+    }
+
+    private float dist(float t, float p) {
+        return Math.abs(t-p);
+    }
+
 
     private void getPossibleBeatPlans(int size) {
 

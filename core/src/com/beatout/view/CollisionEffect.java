@@ -24,21 +24,25 @@ public class CollisionEffect { // TODO: Improve effect animation
     private static final int NUM_RAYS = 150;
     List<ConeLight> coneLights;
 
+    private float intensity = 1.0f;
 
-    public CollisionEffect(Vector position, float angle, Color color, RayHandler rayHandler) {
+
+    public CollisionEffect(Vector position, float angle, Color color, float intensity, RayHandler rayHandler) {
+        System.out.println(intensity);
+        this.intensity = intensity;
         this.position = position;
         this.angle = angle;
         float x = position.getX();
         float y = position.getY();
         float gdxY = Gdx.graphics.getHeight() - y;
         coneLights = new ArrayList<ConeLight>();
-        coneLights.add(new ConeLight(rayHandler, NUM_RAYS, color, radius, x, gdxY, angle, 90));
-        coneLights.add(new ConeLight(rayHandler, NUM_RAYS, color, radius*.7f, x, gdxY, angle+10, 10));
-        coneLights.add(new ConeLight(rayHandler, NUM_RAYS, color, radius*.7f, x, gdxY, angle-10, 10));
+        coneLights.add(new ConeLight(rayHandler, NUM_RAYS, color, 0*radius, x, gdxY, angle, 90));
+        coneLights.add(new ConeLight(rayHandler, NUM_RAYS, color, 0*radius*.7f, x, gdxY, angle+10, 10));
+        coneLights.add(new ConeLight(rayHandler, NUM_RAYS, color, 0*radius*.7f, x, gdxY, angle-10, 10));
     }
 
     public CollisionEffect(Collision collision, float ballRadius, RayHandler rayHandler) {
-        this(calculatePosition(collision, ballRadius), calculateAngle(collision), calculateColor(collision), rayHandler);
+        this(calculatePosition(collision, ballRadius), calculateAngle(collision), calculateColor(collision), collision.getIntensity(), rayHandler);
     }
 
     private static Color calculateColor(Collision collision) {
@@ -91,7 +95,7 @@ public class CollisionEffect { // TODO: Improve effect animation
 
         float radiusScale = 0.85f + (1 - time/duration) * 0.3f;
         for (ConeLight coneLight : coneLights) {
-            coneLight.setDistance(radius * radiusScale);
+            coneLight.setDistance(intensity * radius * radiusScale);
         }
 
         return true;

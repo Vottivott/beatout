@@ -10,6 +10,8 @@ public abstract class Collision implements Positioned {
     private Vector ballPosition;
     private Direction direction;
 
+    private float intensity = 1.0f; // Experimental
+
     public Collision(Vector ballPosition, Direction direction) {
         this.ballPosition = ballPosition;
         this.direction = direction;
@@ -35,6 +37,14 @@ public abstract class Collision implements Positioned {
         } else {
             return new Vector(dirX, -dirY);
         }
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
+    }
+
+    public float getIntensity() {
+        return intensity;
     }
 
     public Direction getDirection() {
