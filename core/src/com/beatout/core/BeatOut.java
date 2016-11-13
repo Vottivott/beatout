@@ -18,6 +18,15 @@ public class BeatOut {
     public static String TEST_BEAT_EVENT = "testBeatoutEvent";
     public static String CYCLE_END = "cycleEnd";
 
+    private PlayMode playMode = PlayMode.NORMAL;
+    public enum PlayMode {
+        NORMAL, CLIPBOARD, REPEAT
+    }
+
+    public void setPlayMode(PlayMode playMode) {
+        this.playMode = playMode;
+    }
+
     String clipboardActivations;
     String clipboardBall;
 //    String clipboadBallTime;
@@ -43,8 +52,12 @@ public class BeatOut {
 
                 gameBoard.getBall().setDirection(calculateDirectionAfterPaddle(gameBoard.getBall(), gameBoard.getPaddle()));
 
-                if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) { //TEST
+                if (playMode == PlayMode.CLIPBOARD || Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) { //TEST
                     gameBoard.setStateFromClipboard();
+                }
+
+                if (playMode == PlayMode.REPEAT) {
+                    gameBoard.setStateFromString(getStateString());
                 }
 
                 currentTrajectory = gameBoard.calculateTrajectory();

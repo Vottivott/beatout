@@ -46,11 +46,7 @@ public class GameBoard extends Collideable {
     public void setStateFromClipboard() {
         //TEST NON-RANDOM ACTIVATION
         String clip = Gdx.app.getClipboard().getContents();
-        String str[] = clip.split(";");
-        if (str.length == 2) {
-        setBlockActivations(str[0]);
-        setBallState(str[1]);
-        }
+        setStateFromString(clip);
     }
 
     private void setBallState(String ballString) {
@@ -330,5 +326,13 @@ public class GameBoard extends Collideable {
 
     public String getBallString() {
         return ball.getPosition().getX() + " " + ball.getPosition().getY() + " " + ball.getDirection().getX() + " " + ball.getDirection().getY();
+    }
+
+    public void setStateFromString(String stateString) {
+        String str[] = stateString.split(";");
+        if (str.length == 2) {
+            setBlockActivations(str[0]);
+            setBallState(str[1]);
+        }
     }
 }

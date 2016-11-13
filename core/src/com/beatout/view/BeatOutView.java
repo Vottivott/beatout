@@ -168,7 +168,15 @@ public class BeatOutView extends ApplicationAdapter {
             if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
 //                Gdx.app.getClipboard().setContents(beatOut.getGameBoard().getBlockActivations());
                 Gdx.app.getClipboard().setContents(beatOut.getStateString());
+            } else {
+                beatOut.setPlayMode(BeatOut.PlayMode.CLIPBOARD);
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            beatOut.setPlayMode(BeatOut.PlayMode.REPEAT);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+            beatOut.setPlayMode(BeatOut.PlayMode.NORMAL);
         }
     }
 
