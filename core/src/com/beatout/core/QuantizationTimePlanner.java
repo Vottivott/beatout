@@ -36,9 +36,18 @@ public class QuantizationTimePlanner implements TimePlanner {
         setBounceIntensities(trajectory, timePositions);
 
         TimePlan timePlan = new LinearTimePlan(timePositions);
+//        TimePlan timePlan = new LinearTimePlan(inverted(timePositions));
 
         return timePlan;
     }
+
+//    private List<Float> inverted(List<Float> timePositions) {
+//        List<Float> inverted = new ArrayList<Float>(timePositions);
+//        for (int i = 0; i < inverted.size(); i++) {
+//            inverted.set(i, 1 - inverted.get(inverted.size()-1-i));
+//        }
+//        return inverted;
+//    }
 
     private void setBounceIntensities(Trajectory trajectory, List<Float> timePositions) {
         for (int i = 0; i < timePositions.size(); i++) {

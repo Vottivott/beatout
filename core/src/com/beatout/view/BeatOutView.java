@@ -237,11 +237,11 @@ public class BeatOutView extends ApplicationAdapter {
     private void drawTrajectory(Trajectory trajectory, ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(1,0f,0f, 1);
         for (Line line : trajectory.getLinesBetweenBounces()) {
-            float gdxX1 = line.getStart().getX();
-            float gdxY1 = Gdx.graphics.getHeight() - line.getStart().getY();
-            float gdxX2 = line.getEnd().getX();
-            float gdxY2 = Gdx.graphics.getHeight() - line.getEnd().getY();
-            shapeRenderer.line(gdxX1, gdxY1, gdxX2, gdxY2);
+            float gdxX1 = line.getStart().getX()+beatOut.getBallRadius();
+            float gdxY1 = Gdx.graphics.getHeight() - line.getStart().getY() - beatOut.getBallRadius();
+            float gdxX2 = line.getEnd().getX()+beatOut.getBallRadius();
+            float gdxY2 = Gdx.graphics.getHeight() - line.getEnd().getY() - beatOut.getBallRadius();
+            shapeRenderer.rectLine(gdxX1, gdxY1, gdxX2, gdxY2, 1.4f);
         }
     }
 
